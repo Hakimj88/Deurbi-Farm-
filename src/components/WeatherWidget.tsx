@@ -67,59 +67,78 @@ export function WeatherWidget({ lat, lon, locationName }: WeatherWidgetProps) {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="card p-0 overflow-hidden border-earth-100 shadow-md relative"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="card p-0 overflow-hidden border-earth-100 shadow-3xl relative group h-full flex flex-col"
     >
-      <div className="bg-[#050505] p-8 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-           {weather.icon.includes('01') && <Sun className="w-32 h-32" />}
-           {(weather.icon.includes('10') || weather.icon.includes('09')) && <CloudRain className="w-32 h-32" />}
-           {(weather.icon.includes('03') || weather.icon.includes('04')) && <Cloud className="w-32 h-32" />}
+      <div className="bg-[#0A0A0A] p-12 text-white relative overflow-hidden flex-1 flex flex-col justify-between">
+        <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+           {weather.icon.includes('01') && <Sun className="w-96 h-96" />}
+           {(weather.icon.includes('10') || weather.icon.includes('09')) && <CloudRain className="w-96 h-96" />}
+           {(weather.icon.includes('03') || weather.icon.includes('04')) && <Cloud className="w-96 h-96" />}
         </div>
-        <div className="relative z-10 flex justify-between items-start">
-          <div>
-            <p className="text-white/50 text-[10px] font-black uppercase tracking-widest">{locationName || weather.locationName}</p>
-            <h2 className="text-6xl font-black mt-2 tracking-tighter">{weather.temp}°</h2>
-            <p className="text-forest-400 font-bold capitalize mt-1 text-sm tracking-wide">{weather.description}</p>
-          </div>
-          <div className="bg-white/10 p-4 rounded-[24px] backdrop-blur-md border border-white/5">
-            {getWeatherIcon(weather.icon)}
+        
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-2.5 h-2.5 bg-forest-500 rounded-full animate-pulse shadow-lg shadow-forest-500/50" />
+                <p className="text-white/40 text-[10px] font-display font-black uppercase tracking-[0.4em]">{locationName || weather.locationName}</p>
+              </div>
+              <h2 className="text-9xl font-display font-black tracking-tighter leading-none italic">{weather.temp}<span className="text-4xl align-top opacity-20 ml-2">°C</span></h2>
+              <div className="flex items-center gap-3 mt-6">
+                <div className="p-2 bg-white/5 rounded-xl border border-white/5">
+                  <Sun className="w-5 h-5 text-amber-500" />
+                </div>
+                <p className="text-white/60 font-display font-black uppercase tracking-[0.2em] text-xs">
+                  {weather.description}
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-white/10 to-transparent p-8 rounded-[2.5rem] backdrop-blur-2xl border border-white/10 shadow-2xl group-hover:rotate-6 transition-all duration-700">
+              {getWeatherIcon(weather.icon)}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mt-10 relative z-10">
-          <div className="bg-white/5 rounded-[20px] p-4 flex flex-col items-center justify-center border border-white/5">
-            <Droplets className="w-5 h-5 mb-2 text-white/40" />
-            <p className="text-[10px] text-white/50 font-black uppercase tracking-widest">Humidity</p>
-            <p className="font-bold text-lg mt-0.5">{weather.humidity}%</p>
+        <div className="grid grid-cols-3 gap-6 relative z-10">
+          <div className="bg-white/5 rounded-3xl p-6 flex flex-col items-center justify-center border border-white/5 hover:bg-white/10 transition-all duration-500 group/item">
+            <Droplets className="w-6 h-6 mb-4 text-white/20 group-hover/item:text-blue-400 transition-colors" />
+            <p className="text-[9px] text-white/30 font-display font-black uppercase tracking-widest mb-1">Humidity</p>
+            <p className="font-display font-black text-2xl tracking-tighter italic">{weather.humidity}%</p>
           </div>
-          <div className="bg-white/5 rounded-[20px] p-4 flex flex-col items-center justify-center border border-white/5">
-            <Wind className="w-5 h-5 mb-2 text-white/40" />
-            <p className="text-[10px] text-white/50 font-black uppercase tracking-widest">Wind</p>
-            <p className="font-bold text-lg mt-0.5">{weather.windSpeed} <span className="text-xs">km/h</span></p>
+          <div className="bg-white/5 rounded-3xl p-6 flex flex-col items-center justify-center border border-white/5 hover:bg-white/10 transition-all duration-500 group/item">
+            <Wind className="w-6 h-6 mb-4 text-white/20 group-hover/item:text-forest-400 transition-colors" />
+            <p className="text-[9px] text-white/30 font-display font-black uppercase tracking-widest mb-1">Velocity</p>
+            <p className="font-display font-black text-2xl tracking-tighter italic">{weather.windSpeed}<span className="text-[10px] opacity-30 ml-1">KPH</span></p>
           </div>
-          <div className="bg-white/5 rounded-[20px] p-4 flex flex-col items-center justify-center border border-white/5">
-            <ThermometerSun className="w-5 h-5 mb-2 text-white/40" />
-            <p className="text-[10px] text-white/50 font-black uppercase tracking-widest">Feel</p>
-            <p className="font-bold text-lg mt-0.5">{weather.temp + 1}°</p>
+          <div className="bg-white/5 rounded-3xl p-6 flex flex-col items-center justify-center border border-white/5 hover:bg-white/10 transition-all duration-500 group/item">
+            <ThermometerSun className="w-6 h-6 mb-4 text-white/20 group-hover/item:text-amber-400 transition-colors" />
+            <p className="text-[9px] text-white/30 font-display font-black uppercase tracking-widest mb-1">Index</p>
+            <p className="font-display font-black text-2xl tracking-tighter italic">{weather.temp + 1}°</p>
           </div>
         </div>
       </div>
 
-      <div className="p-8 bg-white border-t border-earth-100">
-        <p className="text-[10px] font-black text-earth-300 uppercase tracking-widest mb-6 border-b border-earth-100 pb-2">5-Day Forecast</p>
-        <div className="flex justify-between items-center">
+      <div className="p-12 bg-white flex-shrink-0">
+        <div className="flex items-center justify-between mb-10 border-b border-earth-100 pb-5">
+           <p className="text-[10px] font-display font-black text-earth-300 uppercase tracking-[0.4em]">Extended Chronology</p>
+           <div className="flex gap-1">
+             {[1,2,3].map(i => <div key={i} className="w-1 h-1 bg-earth-200 rounded-full"></div>)}
+           </div>
+        </div>
+        <div className="flex justify-between items-center px-4">
           {weather.forecast.map((day, i) => (
-            <div key={i} className="flex flex-col items-center text-center">
-              <span className="text-[10px] font-black text-earth-400 mb-3 uppercase tracking-widest">{day.date}</span>
-              <div className="mb-2 p-2 bg-earth-50 rounded-xl">
-                {day.icon.includes('01') && <Sun className="w-5 h-5 text-amber-500" />}
-                {day.icon.includes('10') && <CloudRain className="w-5 h-5 text-blue-500" />}
-                {day.icon.includes('03') && <Cloud className="w-5 h-5 text-earth-400" />}
-                {!day.icon.includes('01') && !day.icon.includes('10') && !day.icon.includes('03') && <Sun className="w-5 h-5 text-amber-500" />}
+            <div key={i} className="flex flex-col items-center text-center group/day">
+              <span className="text-[10px] font-display font-black text-earth-300 mb-6 uppercase tracking-[0.2em] group-hover/day:text-forest-600 transition-colors">{day.date}</span>
+              <div className="mb-4 p-5 bg-earth-50 rounded-[1.5rem] group-hover/day:bg-forest-50 group-hover/day:-translate-y-2 transition-all duration-500 shadow-sm">
+                {day.icon.includes('01') && <Sun className="w-8 h-8 text-amber-500" />}
+                {day.icon.includes('10') && <CloudRain className="w-8 h-8 text-blue-500" />}
+                {day.icon.includes('03') && <Cloud className="w-8 h-8 text-earth-400" />}
+                {!day.icon.includes('01') && !day.icon.includes('10') && !day.icon.includes('03') && <Sun className="w-8 h-8 text-amber-500" />}
               </div>
-              <span className="text-base font-black text-earth-900">{day.temp}°</span>
+              <span className="text-2xl font-display font-black text-earth-900 tracking-tighter italic">{day.temp}°</span>
             </div>
           ))}
         </div>

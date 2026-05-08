@@ -1,37 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-terracotta-50: #fcf4f2;
-  --color-terracotta-100: #f8e5e1;
-  --color-terracotta-500: #D46A43;
-  --color-terracotta-600: #c24624;
-  --color-terracotta-900: #5c1e0d;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-earth-50: #F8F7F3;
-  --color-earth-100: #eae4d9;
-  --color-earth-200: #dcd4c3;
-  --color-earth-300: #b9ac93;
-  --color-earth-400: #a39171;
-  --color-earth-500: #8a7b5d;
-  --color-earth-600: #6b5f48;
-  --color-earth-700: #4d4534;
-  --color-earth-800: #333333;
+  --color-terracotta-50: #fef6f3;
+  --color-terracotta-100: #fdecde;
+  --color-terracotta-200: #fbd6c1;
+  --color-terracotta-300: #f8b495;
+  --color-terracotta-400: #f38661;
+  --color-terracotta-500: #ee6139;
+  --color-terracotta-600: #df4423;
+  --color-terracotta-700: #ba331e;
+  --color-terracotta-800: #942b1f;
+  --color-terracotta-900: #78261e;
+  --color-terracotta-950: #420f0b;
+
+  --color-earth-50: #fbfaf8;
+  --color-earth-100: #f5f2ed;
+  --color-earth-200: #e9e3d8;
+  --color-earth-300: #d6ccba;
+  --color-earth-400: #bcab93;
+  --color-earth-500: #a28b6d;
+  --color-earth-600: #8c7358;
+  --color-earth-700: #745f4a;
+  --color-earth-800: #5f4e3e;
   --color-earth-900: #1A1A1A;
   
-  --color-forest-50: #f0fdf4;
-  --color-forest-100: #dcfce7;
-  --color-forest-500: #22c55e;
-  --color-forest-600: #16a34a;
-  --color-forest-700: #15803d;
-  --color-forest-900: #14532d;
+  --color-forest-50: #f2f7f2;
+  --color-forest-100: #e2ede2;
+  --color-forest-200: #c5dac7;
+  --color-forest-300: #9cbca0;
+  --color-forest-400: #6f9674;
+  --color-forest-500: #4d7a54;
+  --color-forest-600: #3b6241;
+  --color-forest-700: #314f37;
+  --color-forest-800: #2a412f;
+  --color-forest-900: #243628;
+  --color-forest-950: #121d15;
 
   --color-amber-50: #fffbeb;
   --color-amber-500: #f59e0b;
   --color-amber-600: #d97706;
 
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", sans-serif;
+  --radius-3xl: 2rem;
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 10px -2px rgba(0, 0, 0, 0.02);
+  --shadow-elevated: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
 }
 
 @layer base {
@@ -42,11 +58,11 @@
 
 @layer components {
   .card {
-    @apply bg-white rounded-[32px] border border-earth-100/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300;
+    @apply bg-white rounded-[32px] border border-earth-100/50 shadow-soft transition-all duration-300;
   }
   
   .card-hover {
-    @apply hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] hover:-translate-y-1;
+    @apply hover:shadow-elevated hover:-translate-y-1 active:scale-[0.98];
   }
 
   .glass {
@@ -58,13 +74,16 @@
   }
   
   .btn-primary {
-    @apply bg-forest-600 text-white rounded-2xl px-6 py-3 font-bold text-sm shadow-lg shadow-forest-600/20 hover:bg-forest-700 hover:shadow-forest-700/30 transition-all active:scale-95;
+    @apply bg-forest-600 text-white rounded-2xl px-6 py-3 font-display font-semibold text-sm shadow-lg shadow-forest-600/20 hover:bg-forest-700 hover:shadow-forest-700/30 transition-all active:scale-95;
   }
 
   .btn-secondary {
-    @apply bg-earth-100 text-earth-700 rounded-2xl px-6 py-3 font-bold text-sm hover:bg-earth-200 transition-all active:scale-95;
+    @apply bg-earth-100 text-earth-700 rounded-2xl px-6 py-3 font-display font-semibold text-sm hover:bg-earth-200 transition-all active:scale-95;
   }
 
+  .input-field {
+    @apply w-full bg-white border border-earth-100 rounded-2xl p-4 font-sans focus:outline-none focus:ring-4 focus:ring-forest-500/10 focus:border-forest-500 transition-all;
+  }
   .organic-shape {
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }

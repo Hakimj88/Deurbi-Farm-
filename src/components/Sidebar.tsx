@@ -1,4 +1,5 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { 
   LayoutDashboard, 
   Map, 
@@ -94,46 +95,61 @@ export function Sidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex flex-col items-center py-6 bg-[#050505] text-white w-[88px] flex-shrink-0 z-50 h-full border-r rtl:border-l rtl:border-r-0 border-white/10 shadow-2xl">
-        <div className="mb-8 mt-2 relative group">
-          <div className="w-[48px] h-[48px] bg-forest-600 rounded-2xl flex items-center justify-center cursor-pointer shadow-[0_0_20px_rgba(22,163,74,0.3)] transition-transform hover:scale-110">
-            <Sprout className="w-6 h-6 text-white" />
-          </div>
-          {currentFarm && (
-            <button 
-              onClick={() => setSelectedFarmId(null)}
-              className="absolute -right-2 -bottom-2 w-6 h-6 bg-earth-900 rounded-full flex items-center justify-center text-forest-400 border border-white/10 shadow-xl hover:bg-forest-900 transition-all scale-0 group-hover:scale-100 object-cover"
-              title="Change Farm Plot"
-            >
-              <RefreshCcw className="w-3 h-3" />
-            </button>
-          )}
+      <div className="hidden md:flex flex-col items-center py-8 bg-[#0A0A0A] text-white w-[100px] flex-shrink-0 z-50 h-full border-r rtl:border-l rtl:border-r-0 border-white/5 shadow-2xl relative">
+        <div className="mb-10 mt-2 relative group px-4">
+          <Link to="/" className="w-full aspect-square bg-gradient-to-br from-forest-500 to-forest-700 rounded-2xl flex items-center justify-center cursor-pointer shadow-[0_0_25px_rgba(22,163,74,0.25)] transition-all duration-500 hover:rotate-12 hover:scale-110 active:scale-95 group">
+            <Sprout className="w-7 h-7 text-white animate-in zoom-in duration-500" />
+            
+            {/* Pulsing indicator for active farm */}
+            {currentFarm && (
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-terracotta-500 rounded-full border-2 border-[#0A0A0A] animate-pulse" />
+            )}
+          </Link>
         </div>
-        <nav className="flex flex-col gap-4 w-full items-center">
+
+        <nav className="flex flex-col gap-3 w-full items-center px-3 flex-1 overflow-y-auto custom-scrollbar no-scrollbar">
           {allItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) => cn(
-                "group relative flex items-center justify-center rounded-2xl transition-all duration-300 w-[52px] h-[52px]",
+                "group relative flex items-center justify-center rounded-2xl transition-all duration-400 w-full aspect-square",
                 isActive 
-                  ? "bg-white text-earth-900 shadow-lg scale-105" 
-                  : "text-white/40 hover:bg-white/10 hover:text-white"
+                  ? "bg-white text-earth-900 shadow-xl shadow-black/20" 
+                  : "text-white/30 hover:bg-white/5 hover:text-white"
               )}
-              title={item.label}
             >
               {({ isActive }) => (
                 <>
-                  <item.icon className={cn("w-6 h-6 transition-transform", isActive ? "scale-110" : "group-hover:scale-110")} />
+                  <item.icon className={cn("w-6 h-6 transition-all duration-500", isActive ? "scale-110" : "group-hover:scale-110 group-hover:rotate-3")} />
                   {/* Tooltip */}
-                  <div className="absolute ltr:left-full rtl:right-full ltr:ml-4 rtl:mr-4 px-3 py-1.5 bg-white text-earth-900 text-[10px] font-black uppercase tracking-widest rounded-lg opacity-0 ltr:-translate-x-4 rtl:translate-x-4 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap shadow-xl z-50">
+                  <div className="absolute ltr:left-full rtl:right-full ltr:ml-4 rtl:mr-4 px-4 py-2 bg-white text-earth-900 text-[11px] font-display font-bold uppercase tracking-widest rounded-xl opacity-0 ltr:-translate-x-4 rtl:translate-x-4 pointer-events-none transition-all duration-400 group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap shadow-2xl z-50 border border-earth-100">
                     {item.label}
                   </div>
+                  {isActive && (
+                    <motion.div 
+                      layoutId="sidebar-active-indicator"
+                      className="absolute ltr:left-[-12px] rtl:right-[-12px] w-1 h-8 bg-forest-500 rounded-full"
+                    />
+                  )}
                 </>
               )}
             </NavLink>
           ))}
         </nav>
+
+        {currentFarm && (
+          <div className="mt-auto py-8 w-full px-4 text-center">
+            <button 
+              onClick={() => setSelectedFarmId(null)}
+              className="w-12 h-12 rounded-2xl bg-white/5 hover:bg-forest-500/10 border border-white/5 flex items-center justify-center text-forest-400 transition-all hover:scale-110 active:scale-95 group"
+              title="Switch Plot"
+            >
+              <RefreshCcw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-700" />
+            </button>
+            <p className="text-[8px] font-black uppercase tracking-widest text-white/20 mt-3 truncate px-1">{currentFarm.name}</p>
+          </div>
+        )}
       </div>
 
       {/* Mobile Bottom Navigation */}

@@ -1,100 +1,119 @@
 import React from 'react';
-import { Sun, ThermometerSun, ShieldAlert, Bug, Droplet, Sprout, Wind } from 'lucide-react';
+import { Sun, ThermometerSun, ShieldAlert, Bug, Droplet, Sprout, Wind, Layers, Activity } from 'lucide-react';
+import { motion } from 'motion/react';
+import { cn } from '../lib/utils';
 
 export const GreenhouseGuide = () => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, scale: 0.95 },
+    show: { opacity: 1, scale: 1 }
+  };
+
   return (
-    <div className="space-y-8 max-w-4xl pb-12">
-      <section className="bg-white rounded-2xl shadow-sm border border-earth-100 overflow-hidden">
-        <div className="bg-emerald-50 p-6 border-b border-earth-100 flex items-center gap-3">
-          <Sun className="w-6 h-6 text-emerald-700" />
-          <h2 className="text-2xl font-bold text-emerald-900">Greenhouse & Protected Cropping in West Africa</h2>
-        </div>
-        <div className="p-6 space-y-6">
-          <p className="text-sm text-earth-800">
-            Greenhouse farming is increasingly popular for high-value vegetables to extend seasons, control temperatures, and protect crops from heavy rainfall and pests during the wet season. However, it requires careful management.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 mt-6">
-            <div className="space-y-4 text-sm text-earth-800">
-              <div className="border-l-4 border-emerald-400 pl-4">
-                <h4 className="font-bold text-earth-900 mb-1 flex items-center gap-2"><ThermometerSun className="w-4 h-4 text-emerald-600"/> Temperature & Ventilation</h4>
-                <p>Greenhouses in the Sahel/Sudano-Guinean zone can easily exceed 50°C. High-arch designs with top ventilation and roll-up side walls (covered in insect netting) are mandatory. Use 30-40% white or aluminized shade nets to reflect solar radiation.</p>
-              </div>
-              <div className="border-l-4 border-emerald-400 pl-4">
-                <h4 className="font-bold text-earth-900 mb-1 flex items-center gap-2"><Droplet className="w-4 h-4 text-emerald-600"/> Irrigation & Humidity</h4>
-                <p>Drip irrigation is essential. High humidity inside the greenhouse can lead to fungal diseases (like Botrytis or Powdery Mildew). Water early in the morning and ensure good airflow.</p>
-              </div>
+    <motion.div 
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-12 max-w-5xl pb-20"
+    >
+      <motion.section variants={item} className="card overflow-hidden border-earth-100 shadow-2xl bg-white group">
+        <div className="bg-emerald-600 p-12 text-white relative overflow-hidden transition-all duration-700">
+           <div className="absolute top-0 right-0 p-12 opacity-[0.1] group-hover:opacity-[0.2] transition-all italic font-display font-black text-7xl text-white uppercase tracking-tighter group-hover:scale-125 duration-1000">SHADE NET</div>
+           <div className="flex items-center gap-8 relative z-10">
+            <div className="p-5 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 shadow-2xl group-hover:rotate-12 transition-transform duration-500">
+               <Sun className="w-10 h-10" />
             </div>
-
-            <div className="space-y-4 text-sm text-earth-800">
-               <div className="border-l-4 border-emerald-400 pl-4">
-                <h4 className="font-bold text-earth-900 mb-1 flex items-center gap-2"><Sprout className="w-4 h-4 text-emerald-600"/> Soil Prep & Growing Mediums</h4>
-                <p>Continuous cropping in a confined space leads to nematode build-up and soil-borne diseases. Solarization (covering moist soil with clear plastic for 4 weeks in the hot sun) is a must between cycles. Alternatively, use grow bags containing coco peat and compost.</p>
-              </div>
-              <div className="border-l-4 border-emerald-400 pl-4">
-                <h4 className="font-bold text-earth-900 mb-1 flex items-center gap-2"><Wind className="w-4 h-4 text-emerald-600"/> Pollination</h4>
-                <p>Since natural pollinators (bees, wind) are excluded, crops like tomatoes require manual pollination. This is done by gently shaking or tapping the supporting wires/strings every morning when humidity is ideal, or by introducing bumblebees if available.</p>
-              </div>
+            <div>
+              <h2 className="text-5xl font-display font-black italic tracking-tighter leading-none mb-3">Biosphere Management</h2>
+              <p className="text-emerald-100/60 text-[10px] font-display font-black uppercase tracking-[0.4em]">Region: Sahel / Sudano-Guinean v1.2</p>
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="bg-white rounded-2xl shadow-sm border border-earth-100 overflow-hidden">
-        <div className="bg-amber-50 p-6 border-b border-earth-100 flex items-center gap-3">
-          <Bug className="w-6 h-6 text-amber-700" />
-          <h2 className="text-2xl font-bold text-amber-900">Pest & Disease Management (IPM)</h2>
-        </div>
-        <div className="p-6">
-          <p className="text-sm text-earth-800 mb-4">
-             Protected cropping creates a haven for certain pests if they get inside. <strong>Prevention is key.</strong>
+        
+        <div className="p-12 space-y-12">
+          <p className="text-lg text-earth-800 font-medium italic border-l-4 border-emerald-500 pl-8 max-w-3xl leading-relaxed">
+            Protected cropping in West Africa demands absolute thermodynamic control. Atmospheric stabilization is the primary driver of high-value vegetable yields in high-radiation sectors.
           </p>
-          <div className="grid sm:grid-cols-2 gap-4">
-             <div className="bg-white p-4 rounded-xl border border-earth-200">
-               <h4 className="font-bold text-earth-900 mb-2">Spider Mites & Whiteflies</h4>
-               <p className="text-sm text-earth-700">These pests thrive in hot, enclosed spaces. Use yellow and blue sticky traps consistently. Apply preventative foliar sprays of Neem oil before populations explode.</p>
-             </div>
-             <div className="bg-white p-4 rounded-xl border border-earth-200">
-               <h4 className="font-bold text-earth-900 mb-2">Nematodes</h4>
-               <p className="text-sm text-earth-700">A major issue in greenhouse soils. Practice crop rotation with resistant varieties, solarize the soil, or utilize soilless mediums (grow bags).</p>
-             </div>
-             <div className="bg-white p-4 rounded-xl border border-earth-200">
-               <h4 className="font-bold text-earth-900 mb-2">Fungal Diseases</h4>
-               <p className="text-sm text-earth-700">Due to high humidity. Ensure adequate plant spacing, prune lower leaves (especially on tomatoes) to improve airflow, and use Garlic or Papaya leaf extracts as preventative bio-fungicides.</p>
-             </div>
-             <div className="bg-white p-4 rounded-xl border border-earth-200">
-               <h4 className="font-bold text-earth-900 mb-2">Strict Hygiene</h4>
-               <p className="text-sm text-earth-700">Implement double-door entry systems. Disinfect tools between plants. Immediately remove and burn any infected plant material outside the greenhouse.</p>
-             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="bg-white rounded-2xl shadow-sm border border-earth-100 overflow-hidden">
-        <div className="bg-blue-50 p-6 border-b border-earth-100 flex items-center gap-3">
-          <ShieldAlert className="w-6 h-6 text-blue-700" />
-          <h2 className="text-2xl font-bold text-blue-900">Suitable Greenhouse Crops</h2>
-        </div>
-        <div className="p-6 divide-y divide-earth-100">
-          <div className="flex gap-4 py-4 first:pt-0 last:pb-0">
-             <div className="w-1/3 font-bold text-earth-900">Tomatoes (Indeterminate)</div>
-             <div className="w-2/3 text-sm text-earth-700">High yield potential. Requires trellising/stringing up to 2-3 meters and regular pruning of side shoots. Very susceptible to nematodes and whiteflies.</div>
-          </div>
-          <div className="flex gap-4 py-4 first:pt-0 last:pb-0">
-             <div className="w-1/3 font-bold text-earth-900">Bell Peppers & Sweet Peppers</div>
-             <div className="w-2/3 text-sm text-earth-700">High market value, especially colored varieties. Requires trellising. Sensitive to extreme heat ({">"}35°C), which can cause flower drop.</div>
-          </div>
-          <div className="flex gap-4 py-4 first:pt-0 last:pb-0">
-             <div className="w-1/3 font-bold text-earth-900">Cucumbers (Parthenocarpic)</div>
-             <div className="w-2/3 text-sm text-earth-700">Must use parthenocarpic seed varieties (they do not require pollination to set fruit). Extremely fast growing, requiring daily harvesting and high water input.</div>
-          </div>
-          <div className="flex gap-4 py-4 first:pt-0 last:pb-0">
-             <div className="w-1/3 font-bold text-earth-900">Lettuce & Leafy Greens</div>
-             <div className="w-2/3 text-sm text-earth-700">Often grown in hydroponic setups inside shade nets or greenhouses to prevent bolting and protect from heavy rains.</div>
+          <div className="grid md:grid-cols-2 gap-10">
+            {[
+              { icon: <ThermometerSun className="w-6 h-6" />, title: "Thermodynamic Ventilation", desc: "Temperatures can exceed 55°C. High-arch structures with top-flow venting and roll-up lateral walls are critical. Use 40% aluminized shade netting to reflect peak infrared radiation." },
+              { icon: <Droplet className="w-6 h-6" />, title: "Hydraulic Equilibrium", desc: "Drip-infusion is mandatory. Atmospheric saturation triggers Botrytis pathology. Target early morning irrigation windows to maintain leaf-dry cycles and laminar airflow." },
+              { icon: <Layers className="w-6 h-6" />, title: "Substrate Solarization", desc: "Confined cultivation triggers Nematode vectors. Apply 4-week thermal plastic solarization between cycles. Alternatively, migrate to Coco-Peat grow-bag systems." },
+              { icon: <Activity className="w-6 h-6" />, title: "Manual Pollination", desc: "Natural vectors are excluded. Solanaceous crops require mechanical flower stimulation (shaking wires) during optimal morning humidity windows." }
+            ].map((box, i) => (
+              <div key={i} className="p-8 bg-earth-50 rounded-[2.5rem] border border-earth-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all group/box">
+                <div className="p-3 bg-white rounded-2xl w-fit text-emerald-600 shadow-sm mb-6 group-hover/box:scale-110 transition-transform">
+                  {box.icon}
+                </div>
+                <h4 className="font-display font-black text-earth-900 mb-4 text-xl italic tracking-tight">{box.title}</h4>
+                <p className="text-sm text-earth-500 leading-relaxed italic">{box.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-    </div>
+      <motion.section variants={item} className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 card p-12 bg-[#0A0A0A] text-white overflow-hidden relative group">
+           <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:opacity-[0.08] transition-all italic font-display font-black text-7xl text-white pointer-events-none group-hover:scale-125 duration-1000 uppercase">Vector Control</div>
+           
+           <div className="flex items-center gap-6 mb-12 relative z-10">
+             <div className="p-4 bg-amber-500 rounded-2xl group-hover:rotate-12 transition-transform">
+                <Bug className="w-8 h-8 text-black" />
+             </div>
+             <h2 className="text-4xl font-display font-black italic tracking-tighter">Integrated Pest Logic</h2>
+           </div>
+
+           <div className="grid sm:grid-cols-2 gap-8 relative z-10">
+              {[
+                { t: "Mite & Whitefly Suppression", d: "Enclosed environments accelerate populations. Use dual-spectrum sticky traps and weekly Neem infusion protocols." },
+                { t: "Nematode Nullification", d: "Soil-borne threats demand rotation. Solarize moist profiles or utilize soilless mediums to break the reproductive cycle." },
+                { t: "Hyper-Humid Pathology", d: "Prune lower leaf tiers to enhance laminar flow. Deploy Allium-based bio-fungicides during peak humidity spikes." },
+                { t: "Biosphere Integrity", d: "Dual-door entry systems. Full mechanical disinfection. Immediate thermal neutralization of infected biomass." }
+              ].map((d, i) => (
+                <div key={i} className="p-8 bg-white/5 rounded-[2.5rem] border border-white/10 hover:border-amber-500 transition-all hover:bg-white/[0.08] group/d">
+                   <h5 className="text-[10px] font-display font-black text-white/40 uppercase tracking-[0.3em] mb-3 group-hover/d:text-amber-500">Protocol 0{i+1}</h5>
+                   <h4 className="text-lg font-display font-black text-white italic tracking-tight mb-3">{d.t}</h4>
+                   <p className="text-xs text-white/40 leading-relaxed italic">{d.d}</p>
+                </div>
+              ))}
+           </div>
+        </div>
+
+        <div className="card p-12 bg-white border-earth-100 shadow-xl overflow-hidden group">
+           <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl w-fit mb-10 shadow-sm group-hover:scale-110 transition-transform">
+              <ShieldAlert className="w-8 h-8" />
+           </div>
+           <h2 className="text-4xl font-display font-black italic tracking-tighter text-earth-900 mb-4 leading-none">Optimal Cultivars</h2>
+           <p className="text-earth-400 text-xs font-display font-black uppercase tracking-[0.3em] mb-12 italic border-b border-earth-100 pb-4">Greenhouse Selection</p>
+           
+           <div className="space-y-10">
+              {[
+                { t: "Indeterminate Tomatoes", d: "Requires high-altitude trellising. Extreme susceptibility to bacterial wilt." },
+                { t: "Hybrid Bell Peppers", d: "High export parity. Sensitive to thermal flower-drop above 35°C." },
+                { t: "Parthenocarpic Cucumber", d: "Fast-cycle systems. Self-setting fruit prevents manual pollination requirements." },
+                { t: "Laminar Leafy Greens", d: "Hydroponic shade-net integration prevents bolting during thermal peaks." }
+              ].map((d, i) => (
+                <div key={i} className="relative pl-8 group/item">
+                  <div className="absolute left-0 top-0 bottom-0 w-px bg-earth-100 group-hover/item:bg-blue-600 transition-colors"></div>
+                  <h5 className="font-display font-black text-earth-900 text-lg italic tracking-tight leading-none mb-2">{d.t}</h5>
+                  <p className="text-xs text-earth-500 leading-relaxed italic">{d.d}</p>
+                </div>
+              ))}
+           </div>
+        </div>
+      </motion.section>
+    </motion.div>
   );
 };

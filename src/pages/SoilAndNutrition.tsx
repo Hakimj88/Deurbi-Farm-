@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
-import { Beaker, TrendingUp, AlertCircle, Plus, Info } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Beaker, TrendingUp, AlertCircle, Plus, Info, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../lib/utils';
@@ -48,159 +49,179 @@ export function SoilAndNutrition() {
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      <header className="flex justify-between items-center bg-white p-8 rounded-[2rem] border border-earth-100 shadow-sm">
+    <div className="space-y-10 pb-12 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-earth-200">
         <div>
-          <h1 className="text-4xl font-black text-earth-900 tracking-tight flex items-center gap-4 italic uppercase">
-            <Beaker className="w-10 h-10 text-forest-600" />
-            Soil Health & Nutrition
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-forest-50 text-forest-600 rounded-[1.25rem] shadow-sm border border-forest-100">
+              <Beaker className="w-6 h-6" />
+            </div>
+            <p className="text-[11px] font-display font-black text-forest-600 uppercase tracking-[0.3em]">Precision Agriculture Lab</p>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-display font-black text-earth-900 tracking-tighter leading-tight italic">
+            Soil Health & <br/>
+            <span className="text-terracotta-600 italic">Nutrition Monitoring</span>
           </h1>
-          <p className="text-earth-500 font-bold uppercase text-[10px] tracking-[0.3em] mt-2 ml-14">Precision Monitoring for Peak Harvests</p>
         </div>
         <button 
           onClick={() => setIsAddingTest(true)}
-          className="group relative bg-forest-600 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 overflow-hidden transition-all hover:pr-10 active:scale-95 shadow-lg shadow-forest-200"
+          className="btn-primary flex items-center gap-3 px-10 py-5 shadow-2xl shadow-forest-200/50"
         >
-          <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <Plus className="w-5 h-5 transition-transform group-hover:scale-125" />
           Log Soil Test
         </button>
       </header>
 
-      {/* Nutrients Snapshot */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card bg-white p-6 border-earth-100 hover:scale-105 transition-transform cursor-default">
-           <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mb-4">Latest pH Level</p>
-           <div className="flex items-baseline gap-2">
-             <p className="text-5xl font-black text-earth-900 tracking-tighter">{latestTest?.ph || '—'}</p>
-             <span className="text-sm font-bold text-forest-600">
-               {latestTest?.ph ? (latestTest.ph < 6 ? 'Acidic' : latestTest.ph > 7 ? 'Alkaline' : 'Optimal') : 'No Data'}
+      {/* Nutrients Snapshot - Refined Bento Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="card p-8 card-hover relative group bg-gradient-to-br from-white to-earth-50/10">
+           <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform">
+             <Beaker className="w-24 h-24 text-forest-600" />
+           </div>
+           <p className="text-[10px] font-display font-black text-earth-300 uppercase tracking-widest mb-6">Latest pH Level</p>
+           <div className="flex items-baseline gap-3 mb-6">
+             <p className="text-6xl font-display font-black text-earth-900 tracking-tighter leading-none">{latestTest?.ph || '—'}</p>
+             <span className="text-xs font-display font-bold text-forest-600 uppercase tracking-widest bg-forest-50 px-2.5 py-1 rounded-lg border border-forest-100">
+               {latestTest?.ph ? (latestTest.ph < 6 ? 'Acidic' : latestTest.ph > 7 ? 'Alkaline' : 'Optimal') : 'N/A'}
              </span>
            </div>
-           <div className="w-full bg-earth-100 h-2 rounded-full mt-6 overflow-hidden flex">
-             <div className="h-full bg-terracotta-500" style={{ width: '30%' }}></div>
-             <div className="h-full bg-forest-500" style={{ width: '40%' }}></div>
-             <div className="h-full bg-amber-500" style={{ width: '30%' }}></div>
+           <div className="w-full bg-earth-100/50 h-2.5 rounded-full overflow-hidden flex shadow-inner">
+             <div className="h-full bg-terracotta-400" style={{ width: '30%' }}></div>
+             <div className="h-full bg-forest-400" style={{ width: '40%' }}></div>
+             <div className="h-full bg-amber-400" style={{ width: '30%' }}></div>
            </div>
+           <p className="text-[9px] font-display font-bold text-earth-400 mt-4 uppercase tracking-[0.2em]">Scale: Acidic / Optimal / Alkaline</p>
         </div>
 
-        <div className="card bg-white p-6 border-earth-100 hover:scale-105 transition-transform cursor-default">
-           <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mb-4">Nitrogen (N)</p>
-           <div className="flex items-baseline gap-2">
-             <p className={cn("text-4xl font-black tracking-tight uppercase", latestTest ? getStatusColor(latestTest.nitrogen).split(' ')[0] : "text-earth-200")}>
-               {latestTest?.nitrogen || '—'}
-             </p>
-           </div>
-           <p className="text-[10px] font-bold text-earth-400 mt-2">
-             {latestTest?.nitrogen === 'low' ? 'Recommended: Urea top-dress' : 'Status: Acceptable'}
-           </p>
-        </div>
-
-        <div className="card bg-white p-6 border-earth-100 hover:scale-105 transition-transform cursor-default">
-           <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mb-4">Phosphorus (P)</p>
-           <div className="flex items-baseline gap-2">
-             <p className={cn("text-4xl font-black tracking-tight uppercase", latestTest ? getStatusColor(latestTest.phosphorus).split(' ')[0] : "text-earth-200")}>
-               {latestTest?.phosphorus || '—'}
-             </p>
-           </div>
-           <p className="text-[10px] font-bold text-earth-400 mt-2">
-             {latestTest?.phosphorus === 'low' ? 'Recommended: NPK 15-15-15' : 'Status: Acceptable'}
-           </p>
-        </div>
-
-        <div className="card bg-white p-6 border-earth-100 hover:scale-105 transition-transform cursor-default">
-           <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mb-4">Potassium (K)</p>
-           <div className="flex items-baseline gap-2">
-             <p className={cn("text-4xl font-black tracking-tight uppercase", latestTest ? getStatusColor(latestTest.potassium).split(' ')[0] : "text-earth-200")}>
-               {latestTest?.potassium || '—'}
-             </p>
-           </div>
-           <p className="text-[10px] font-bold text-earth-400 mt-2">
-             {latestTest?.potassium === 'low' ? 'Recommended: MOP application' : 'Status: Acceptable'}
-           </p>
-        </div>
+        {[
+          { label: 'Nitrogen (N)', key: 'nitrogen', color: 'bg-forest-500', icon: 'N' },
+          { label: 'Phosphorus (P)', key: 'phosphorus', color: 'bg-amber-500', icon: 'P' },
+          { label: 'Potassium (K)', key: 'potassium', color: 'bg-blue-500', icon: 'K' }
+        ].map((nutrient) => (
+          <div key={nutrient.key} className="card p-8 card-hover group relative overflow-hidden bg-gradient-to-br from-white to-earth-50/10">
+             <div className="absolute top-0 right-0 p-8 opacity-[0.03] font-display font-black text-6xl select-none group-hover:scale-110 transition-transform">
+               {nutrient.icon}
+             </div>
+             <p className="text-[10px] font-display font-black text-earth-300 uppercase tracking-widest mb-6">{nutrient.label}</p>
+             <div className="flex items-baseline gap-2 mb-4">
+               <p className={cn("text-5xl font-display font-black tracking-tight uppercase leading-none", latestTest ? getStatusColor(latestTest[nutrient.key as keyof typeof latestTest] as string).split(' ')[0] : "text-earth-200")}>
+                 {latestTest ? latestTest[nutrient.key as keyof typeof latestTest] : '—'}
+               </p>
+             </div>
+             <div className="flex items-center gap-2">
+                <div className={cn("w-1.5 h-1.5 rounded-full", latestTest ? "bg-black/20" : "bg-earth-100")}></div>
+                <p className="text-[10px] font-display font-bold text-earth-400 uppercase tracking-widest">
+                  {latestTest ? (latestTest[nutrient.key as keyof typeof latestTest] === 'low' ? 'Urgent Enrichment' : 'Maintenance Mode') : 'Pending Test'}
+                </p>
+             </div>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Test History */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-black text-earth-900 uppercase tracking-tight italic">Soil Test History</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+        {/* Test History - Refined List */}
+        <div className="xl:col-span-2 space-y-8">
+          <div className="flex items-center justify-between border-b border-earth-100 pb-4">
+            <h2 className="text-2xl font-display font-bold text-earth-900 tracking-tight italic">Test Archive</h2>
+            {soilTests.length > 0 && <span className="text-[10px] font-display font-black text-earth-300 uppercase tracking-widest">{soilTests.length} Records</span>}
           </div>
           
           <div className="space-y-4">
             {soilTests.length === 0 ? (
-              <div className="card p-12 text-center border-dashed border-2 bg-earth-50/50">
-                <Info className="w-12 h-12 text-earth-200 mx-auto mb-4" />
-                <p className="text-earth-500 font-bold uppercase tracking-widest">No soil tests logged yet.</p>
+              <div className="card p-20 text-center border-dashed border-2 bg-earth-50/30 flex flex-col items-center">
+                <div className="p-5 bg-white rounded-[2rem] shadow-soft border border-earth-100 mb-6 group-hover:scale-110 transition-transform">
+                  <Info className="w-10 h-10 text-earth-200" />
+                </div>
+                <h3 className="text-xl font-display font-bold text-earth-900 mb-2">No soil telemetry found</h3>
+                <p className="text-earth-500 font-medium text-sm max-w-[240px]">Start by logging your first manual or lab analysis result.</p>
               </div>
             ) : (
-              soilTests.map(test => {
+              [...soilTests].reverse().map((test, idx) => {
                 const cycle = cropCycles.find(c => c.id === test.cropCycleId);
                 const cropInLibrary = cropLibrary.find(c => c.id === cycle?.cropId);
                 
                 let phStatus = 'Normal';
                 if (cropInLibrary?.optimalPh) {
-                  if (test.ph < cropInLibrary.optimalPh[0]) phStatus = 'Too Acidic for ' + cropInLibrary.name;
-                  if (test.ph > cropInLibrary.optimalPh[1]) phStatus = 'Too Alkaline for ' + cropInLibrary.name;
+                  if (test.ph < cropInLibrary.optimalPh[0]) phStatus = 'Acidic for ' + cropInLibrary.name;
+                  if (test.ph > cropInLibrary.optimalPh[1]) phStatus = 'Alkaline for ' + cropInLibrary.name;
                 }
 
                 return (
-                  <div key={test.id} className="card p-6 bg-white border-earth-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="flex gap-6">
-                      <div className="w-16 h-16 bg-earth-50 rounded-2xl flex flex-col items-center justify-center border border-earth-100 shrink-0">
-                        <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest leading-none mb-1">{format(new Date(test.date), 'MMM')}</p>
-                        <p className="text-2xl font-black text-earth-900 tracking-tighter leading-none">{format(new Date(test.date), 'dd')}</p>
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    key={test.id} 
+                    className="card p-8 group hover:bg-white hover:border-forest-200 transition-all flex flex-col md:flex-row md:items-center justify-between gap-8 border-transparent"
+                  >
+                    <div className="flex gap-8 items-start">
+                      <div className="w-20 h-20 bg-earth-50 rounded-[2rem] flex flex-col items-center justify-center border border-earth-100 group-hover:bg-forest-50 group-hover:border-forest-100 transition-colors shadow-inner shrink-0">
+                        <p className="text-[11px] font-display font-black text-earth-400 uppercase tracking-widest leading-none mb-1 group-hover:text-forest-400">{format(new Date(test.date), 'MMM')}</p>
+                        <p className="text-3xl font-display font-black text-earth-900 tracking-tighter leading-none group-hover:text-forest-900">{format(new Date(test.date), 'dd')}</p>
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-earth-900 tracking-tight italic">{cycle?.variety || 'General Plot'}</h3>
+                        <div className="flex items-center gap-3 mb-2">
+                           <h3 className="text-2xl font-display font-bold text-earth-900 tracking-tight italic">{cycle?.variety || 'Field Boundary Test'}</h3>
+                           <span className="px-2.5 py-1 bg-amber-50 text-amber-700 text-[9px] font-display font-black uppercase tracking-widest rounded-lg border border-amber-100">Lab Analysis</span>
+                        </div>
                         <p className={cn(
-                          "text-[10px] font-bold uppercase tracking-[0.2em] mt-1",
+                          "text-[10px] font-display font-bold uppercase tracking-[0.2em] mb-6",
                           phStatus === 'Normal' ? "text-earth-400" : "text-terracotta-600"
                         )}>
                           {phStatus} {test.notes ? `• ${test.notes}` : ''}
                         </p>
-                        <div className="flex gap-2 mt-3">
-                           <span className={cn("text-[9px] font-black px-2 py-1 rounded-full border uppercase tracking-widest", getStatusColor(test.nitrogen))}>N: {test.nitrogen}</span>
-                           <span className={cn("text-[9px] font-black px-2 py-1 rounded-full border uppercase tracking-widest", getStatusColor(test.phosphorus))}>P: {test.phosphorus}</span>
-                           <span className={cn("text-[9px] font-black px-2 py-1 rounded-full border uppercase tracking-widest", getStatusColor(test.potassium))}>K: {test.potassium}</span>
-                           <span className="text-[9px] font-black px-2 py-1 rounded-full border border-earth-100 text-earth-600 uppercase tracking-widest bg-earth-50">pH: {test.ph}</span>
+                        <div className="flex flex-wrap gap-3">
+                           <div className={cn("px-4 py-2 rounded-2xl border text-[10px] font-display font-black uppercase tracking-widest shadow-sm", getStatusColor(test.nitrogen))}>N: {test.nitrogen}</div>
+                           <div className={cn("px-4 py-2 rounded-2xl border text-[10px] font-display font-black uppercase tracking-widest shadow-sm", getStatusColor(test.phosphorus))}>P: {test.phosphorus}</div>
+                           <div className={cn("px-4 py-2 rounded-2xl border text-[10px] font-display font-black uppercase tracking-widest shadow-sm", getStatusColor(test.potassium))}>K: {test.potassium}</div>
+                           <div className="px-4 py-2 rounded-2xl border border-earth-100 text-earth-600 text-[10px] font-display font-black uppercase tracking-widest bg-earth-50 shadow-sm">pH: {test.ph}</div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })
             )}
           </div>
         </div>
 
-        {/* AI Recommendations */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-black text-earth-900 uppercase tracking-tight italic">AI Nutrition Advisor</h2>
-          <div className="card p-8 bg-gradient-to-br from-forest-700 to-forest-900 text-white border-none shadow-xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-110 transition-transform">
-               <Beaker className="w-32 h-32" />
+        {/* AI Nutrition Advisor - Refined Card */}
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 border-b border-earth-100 pb-4">
+             <TrendingUp className="w-5 h-5 text-forest-600" />
+             <h2 className="text-2xl font-display font-bold text-earth-900 tracking-tight italic">Intelligence Hub</h2>
+          </div>
+          
+          <div className="card p-10 bg-forest-900 text-white border-none shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-125 transition-transform pointer-events-none">
+               <Beaker className="w-48 h-48" />
             </div>
+            
             <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center">
-                  <AlertCircle className="w-6 h-6 text-white" />
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg">
+                  <Sparkles className="w-6 h-6 text-amber-400" />
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-forest-200">Attention Required</p>
+                <div>
+                  <p className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-forest-300">Bioavailability Alert</p>
+                  <p className="text-xs font-bold text-white/50">Updated 2h ago</p>
+                </div>
               </div>
-              <h3 className="text-2xl font-black italic mb-4 tracking-tight leading-tight">Nitrogen levels in Post-Planting plots are 25% below optimal.</h3>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-3 text-xs font-bold text-forest-100">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5"></div>
-                  Apply 50kg Urea/ha as top-dressing immediately.
-                </li>
-                <li className="flex items-start gap-3 text-xs font-bold text-forest-100">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5"></div>
-                  Consider intercropping with Cowpea to fix biological nitrogen.
-                </li>
-              </ul>
-              <button className="w-full py-4 bg-white text-forest-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-forest-50 transition-colors">
+              
+              <h3 className="text-3xl font-display font-black italic mb-6 tracking-tight leading-tight">Nitrogen levels in <span className="text-amber-400 italic">Sector 4</span> are drifting from setpoints.</h3>
+              
+              <div className="space-y-6 mb-10">
+                <div className="p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/[0.08] transition-colors group/item">
+                  <p className="text-[10px] font-display font-black text-amber-400 uppercase tracking-widest mb-2">Recommendation 01</p>
+                  <p className="text-sm font-medium text-forest-50 leading-relaxed italic">Apply 50kg Urea/ha as top-dressing immediately. Focus on silking phase crops.</p>
+                </div>
+                <div className="p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/[0.08] transition-colors group/item">
+                  <p className="text-[10px] font-display font-black text-amber-400 uppercase tracking-widest mb-2">Recommendation 02</p>
+                  <p className="text-sm font-medium text-forest-50 leading-relaxed italic">Initiate organic mulching to retain nutrient leach from recent high-intensity rains.</p>
+                </div>
+              </div>
+              
+              <button className="w-full py-5 bg-white text-forest-900 rounded-[1.5rem] text-[11px] font-display font-black uppercase tracking-[0.2em] hover:bg-forest-50 transition-all hover:scale-[1.02] active:scale-95 shadow-xl">
                 Generate Full Profile
               </button>
             </div>

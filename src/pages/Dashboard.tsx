@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { useStore } from '../store';
 import { Sprout, CheckCircle2, Clock, AlertCircle, Sparkles, Loader2, Map, CloudSun, Package, TrendingUp, Calculator } from 'lucide-react';
 import { format } from 'date-fns';
@@ -28,7 +29,7 @@ export function Dashboard() {
   const farmExpenses = farmFinancialRecords.filter(r => r.category !== 'revenue').reduce((acc, curr) => acc + curr.totalCost, 0);
   const farmProfitability = farmRevenue - farmExpenses;
 
-  const latestSoilTest = soilTests.findLast(t => currentFarmCycles.some(c => c.id === t.cropCycleId));
+  const latestSoilTest = [...soilTests].reverse().find(t => currentFarmCycles.some(c => c.id === t.cropCycleId));
   const recentIrrigation = irrigationRecords.filter(r => currentFarmCycles.some(c => c.id === r.cropCycleId)).reduce((acc, curr) => acc + curr.volume, 0);
 
   const activeCycles = currentFarmCycles.filter(c => c.status === 'active');
@@ -79,154 +80,185 @@ export function Dashboard() {
     }
   }, [currentFarm, farms, cropCycles, tasks, scoutingRecords, harvestRecords]);
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  };
+
   return (
-    <div className="space-y-6">
-      <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-forest-100 text-forest-600 rounded-xl shadow-sm">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-3 duration-700 pb-20">
+      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 pb-10 border-b border-earth-100">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-forest-50 text-forest-600 rounded-[1.25rem] shadow-sm border border-forest-100">
                <Map className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black text-forest-600 uppercase tracking-[0.2em]">{currentFarm?.name}</span>
+            <p className="text-[11px] font-display font-black text-forest-600 uppercase tracking-[0.3em]">{currentFarm?.name || "Global Farm Operations"}</p>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-earth-900 tracking-tighter mb-2">
-            {t('dashboard.welcome')},<br/>
-            <span className="text-forest-600 italic">{farmer?.name || 'Farmer'}</span>
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-display font-black text-earth-900 tracking-tighter mb-4 sm:mb-6 leading-[0.85] italic">
+            {getGreeting()},<br/>
+            <span className="text-terracotta-600">{farmer?.name || 'Farmer'}</span>
           </h1>
-          <p className="text-earth-500 font-medium text-lg mt-4 max-w-lg">{t('dashboard.overview')}</p>
+          <p className="text-earth-400 font-medium text-lg sm:text-xl max-w-xl leading-relaxed italic">{t('dashboard.overview')}</p>
         </div>
-        <div className="flex items-center gap-4 text-sm font-bold text-earth-600 bg-white px-6 py-4 rounded-2xl border border-earth-100 shadow-sm transition-transform hover:scale-105 cursor-default">
-          <CloudSun className="w-5 h-5 text-amber-500" />
-          <span className="uppercase tracking-widest text-[11px]">{format(new Date(), 'EEEE, MMMM do')}</span>
+        
+        <div className="flex items-center gap-4 sm:gap-6 text-sm font-display font-bold text-earth-700 bg-white px-6 sm:px-10 py-4 sm:py-6 rounded-[2rem] sm:rounded-[2.5rem] border border-earth-100 shadow-soft transition-all hover:shadow-elevated hover:scale-[1.02] cursor-default group relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <CloudSun className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500" />
+          <div className="flex flex-col relative z-10">
+            <span className="uppercase tracking-[0.2em] text-[10px] text-earth-300 font-black mb-1">{format(new Date(), 'EEEE').toUpperCase()}</span>
+            <span className="tracking-tighter text-xl sm:text-2xl font-black text-earth-900">{format(new Date(), 'MMM dd, yyyy')}</span>
+          </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          {/* AI Insights Banner */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        <div className="xl:col-span-3 space-y-8">
+          {/* AI Insights Banner - Ultra Premium */}
           {(insights.length > 0 || loadingInsights) && (
-            <div className="relative overflow-hidden rounded-[32px] bg-forest-900 text-white shadow-2xl shadow-forest-900/20 mb-8 border border-forest-800">
-               <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 flex justify-end">
-                 <Sparkles className="w-64 h-64 text-amber-400" />
-               </div>
-               <div className="relative z-10 p-8 border-b border-white/5 bg-white/5 flex items-center justify-between backdrop-blur-md">
-                 <div className="flex items-center gap-4">
-                   <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-inner">
-                     <Sparkles className="w-6 h-6 text-white" />
-                   </div>
-                   <div>
-                     <h2 className="text-2xl font-black tracking-tight italic">{t('dashboard.ai_insights')}</h2>
-                     <p className="text-forest-200 text-[10px] font-bold uppercase tracking-widest mt-1">{t('dashboard.realtime_analysis')}</p>
-                   </div>
-                 </div>
-               </div>
-              <div className="relative z-10 p-8 bg-forest-900/50">
-                {loadingInsights ? (
-                  <div className="flex items-center gap-4 text-forest-200 py-4">
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                    <p className="text-sm font-bold tracking-widest uppercase">{t('dashboard.analyzing')}</p>
-                  </div>
-                ) : (
-                  <ul className="space-y-6">
-                    {insights.map((insight, idx) => (
-                      <li key={idx} className="flex gap-4 items-start group">
-                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-black text-amber-400 border border-white/10 group-hover:scale-110 transition-transform">
-                          {idx + 1}
-                        </span>
-                        <p className="text-base leading-relaxed text-forest-50 font-medium">{insight}</p>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative overflow-hidden rounded-[3rem] bg-[#0A0A0A] text-white shadow-3xl border border-white/5"
+            >
+              <div className="absolute top-0 right-0 p-24 opacity-[0.05] rotate-12 flex justify-end pointer-events-none">
+                <Sparkles className="w-[800px] h-[800px] text-amber-400 animate-pulse" />
               </div>
-            </div>
+              
+              <div className="relative z-10 p-6 sm:p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-12">
+                <div className="md:w-1/3 flex flex-col justify-between">
+                  <div>
+                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-amber-300 to-amber-600 flex items-center justify-center shadow-2xl shadow-amber-900/40 mb-6 sm:mb-8 border border-white/20">
+                      <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black tracking-tighter italic leading-none">{t('dashboard.ai_insights')}</h2>
+                    <p className="text-amber-500 text-[9px] sm:text-[10px] font-display font-black uppercase tracking-[0.4em] mt-4 sm:mt-5">{t('dashboard.realtime_analysis')}</p>
+                  </div>
+                  
+                  <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10 hidden md:block">
+                     <p className="text-white/40 text-[10px] sm:text-xs font-medium leading-relaxed pr-6 uppercase tracking-widest">Precision agriculture engine v2.0</p>
+                  </div>
+                </div>
+
+                <div className="md:w-2/3 bg-white/[0.03] rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 backdrop-blur-xl border border-white/10 shadow-inner">
+                  {loadingInsights ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <Loader2 className="w-16 h-16 text-amber-500 animate-spin mb-6" />
+                      <p className="text-xs font-display font-black tracking-[0.3em] uppercase text-white/40">{t('dashboard.analyzing')}</p>
+                    </div>
+                  ) : (
+                    <ul className="space-y-8">
+                      {insights.map((insight, idx) => (
+                        <motion.li 
+                          key={idx} 
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.15 }}
+                          className="flex gap-6 items-start group"
+                        >
+                          <span className="flex-shrink-0 w-12 h-12 rounded-[1.25rem] bg-white/5 flex items-center justify-center text-xs font-display font-black text-amber-500 border border-white/5 group-hover:bg-amber-500 group-hover:text-[#0A0A0A] transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                            {idx + 1}
+                          </span>
+                          <p className="text-lg leading-relaxed text-white/70 font-medium group-hover:text-white transition-colors duration-300 pt-2">{insight}</p>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           )}
 
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="card p-6 bg-earth-50/50 hover:bg-white border-earth-100 transition-colors group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-earth-100 text-forest-500">
-                  <Sprout className="w-6 h-6" />
-                </div>
+          {/* KPI Bento Grid - Ultra Premium */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <motion.div whileHover={{ y: -8 }} className="card p-6 sm:p-8 lg:p-10 card-hover relative overflow-hidden group border-earth-100">
+              <div className="absolute top-0 right-0 p-6 sm:p-8 lg:p-10 opacity-[0.03] -mr-6 -mt-6 group-hover:scale-125 transition-transform duration-700 italic font-black text-4xl">STATS</div>
+              <div className="p-3 sm:p-4 bg-forest-50 text-forest-600 rounded-2xl sm:rounded-3xl border border-forest-100 w-fit mb-6 sm:mb-8 shadow-sm">
+                <Sprout className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
-              <p className="text-4xl font-black text-earth-900 tracking-tighter truncate">{activeCycles.length}</p>
-              <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mt-2">{t('dashboard.active_cycles')}</p>
-            </div>
+              <p className="text-5xl sm:text-6xl font-display font-black text-earth-900 tracking-tighter leading-none italic">{activeCycles.length}</p>
+              <div className="flex items-center gap-2 mt-4 sm:mt-6">
+                <span className="w-1.5 h-1.5 bg-forest-500 rounded-full"></span>
+                <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-400 uppercase tracking-widest leading-none">{t('dashboard.active_cycles')}</p>
+              </div>
+            </motion.div>
             
-            <div className="card p-6 bg-earth-50/50 hover:bg-white border-earth-100 transition-colors group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-earth-100 text-amber-500">
-                  <Clock className="w-6 h-6" />
-                </div>
+            <motion.div whileHover={{ y: -8 }} className="card p-6 sm:p-8 lg:p-10 card-hover relative overflow-hidden group border-earth-100">
+              <div className="p-3 sm:p-4 bg-amber-50 text-amber-600 rounded-2xl sm:rounded-3xl border border-amber-100 w-fit mb-6 sm:mb-8 shadow-sm">
+                <Clock className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
-              <p className="text-4xl font-black text-earth-900 tracking-tighter truncate">{pendingTasks.length}</p>
-              <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mt-2">{t('dashboard.pending_tasks')}</p>
-            </div>
+              <p className="text-5xl sm:text-6xl font-display font-black text-earth-900 tracking-tighter leading-none italic">{pendingTasks.length}</p>
+              <div className="flex items-center gap-2 mt-4 sm:mt-6">
+                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-400 uppercase tracking-widest leading-none">TASKS DUE</p>
+              </div>
+            </motion.div>
 
-            <div className="card p-6 bg-earth-50/50 hover:bg-white border-earth-100 transition-colors group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-earth-100 text-blue-500">
-                  <Package className="w-6 h-6" />
-                </div>
+            <motion.div whileHover={{ y: -8 }} className="card p-6 sm:p-8 lg:p-10 card-hover relative overflow-hidden group border-earth-100">
+              <div className="p-3 sm:p-4 bg-blue-50 text-blue-600 rounded-2xl sm:rounded-3xl border border-blue-100 w-fit mb-6 sm:mb-8 shadow-sm">
+                <Package className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
-              <p className={cn("text-4xl font-black tracking-tighter truncate", lowStockItems.length > 0 ? 'text-terracotta-600' : 'text-earth-900')}>{lowStockItems.length}</p>
-              <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mt-2">{t('dashboard.stock_alerts')}</p>
-            </div>
+              <p className={cn("text-5xl sm:text-6xl font-display font-black tracking-tighter leading-none italic", lowStockItems.length > 0 ? 'text-terracotta-600 underline decoration-4 underline-offset-8' : 'text-earth-900')}>
+                {lowStockItems.length}
+              </p>
+              <div className="flex items-center gap-2 mt-4 sm:mt-6">
+                <span className={cn("w-1.5 h-1.5 rounded-full", lowStockItems.length > 0 ? 'bg-terracotta-500 animate-pulse' : 'bg-blue-500')}></span>
+                <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-400 uppercase tracking-widest leading-none">SUPPLY ALERTS</p>
+              </div>
+            </motion.div>
 
-          <Link to="/finance" className="card p-6 bg-earth-50/50 hover:bg-white border-earth-100 transition-colors group block cursor-pointer">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-earth-100 text-forest-500">
-                  <Calculator className="w-6 h-6" />
-                </div>
+            <Link to="/finance" className="card p-6 sm:p-8 lg:p-10 card-hover relative overflow-hidden group border-earth-100 hover:bg-forest-900 hover:text-white transition-all duration-700">
+              <div className="p-3 sm:p-4 bg-forest-50 text-forest-600 rounded-2xl sm:rounded-3xl border border-forest-100 w-fit mb-6 sm:mb-8 shadow-sm group-hover:bg-white/10 group-hover:border-white/20 group-hover:text-white animate-soft-bounce">
+                <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
-              <p className={cn("text-4xl font-black tracking-tighter truncate", farmProfitability >= 0 ? "text-forest-600" : "text-terracotta-600")}>
-                {farmProfitability >= 0 ? "+" : ""}{farmProfitability >= 1000 ? `${(farmProfitability / 1000).toFixed(1)}k` : farmProfitability} <span className="text-xl">GMD</span>
+              <p className={cn("text-3xl sm:text-4xl lg:text-4xl font-display font-black tracking-tighter leading-none italic transition-colors flex items-end gap-1 truncate", farmProfitability >= 0 ? "text-forest-600 group-hover:text-white" : "text-terracotta-600 group-hover:text-terracotta-400")}>
+                {farmProfitability >= 0 ? "+" : ""}{farmProfitability >= 1000 ? `${(farmProfitability / 1000).toFixed(1)}k` : farmProfitability.toLocaleString()} <span className="text-sm sm:text-base font-black opacity-40 uppercase ml-1">GMD</span>
               </p>
-              <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest mt-2 flex items-center justify-between">
-                 <span className="truncate">{t('dashboard.net_profit')}</span>
-                 <span className="text-earth-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap ml-2">{t('common.view_details')} →</span>
-              </p>
+              <div className="flex items-center gap-2 mt-4 sm:mt-6">
+                <span className="w-1.5 h-1.5 bg-forest-500 rounded-full group-hover:bg-amber-400"></span>
+                <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-400 group-hover:text-white/40 uppercase tracking-widest leading-none">LEDGER BALANCE</p>
+              </div>
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link to="/soil" className="card p-6 bg-amber-50/30 hover:bg-white border-amber-100 transition-colors group flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-amber-100 text-amber-600">
-                  <Calculator className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+            <Link to="/soil" className="card p-6 sm:p-8 lg:p-10 card-hover group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8 bg-white border-earth-100 hover:scale-[1.01]">
+              <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto">
+                <div className="p-4 sm:p-5 bg-amber-50 text-amber-600 rounded-[1.5rem] sm:rounded-[2rem] border border-amber-100 group-hover:bg-amber-100 group-hover:-rotate-12 transition-all duration-500">
+                  <Calculator className="w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
                 <div>
-                   <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest leading-none mb-1">Latest Soil pH</p>
-                   <p className="text-2xl font-black text-earth-900 tracking-tight">{latestSoilTest?.ph || '6.5'}</p>
+                   <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-300 uppercase tracking-[0.3em] mb-2 sm:mb-3 leading-none italic">Biosphere Health</p>
+                   <p className="text-4xl sm:text-5xl font-display font-black text-earth-900 tracking-tighter leading-none italic">{latestSoilTest?.ph || '6.5'} <span className="text-lg sm:text-xl opacity-20">pH</span></p>
                 </div>
               </div>
-              <div className="text-right">
-                 <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest leading-none mb-1">Health Status</p>
-                 <p className="text-sm font-black text-earth-900 italic">Optimal</p>
+              <div className="text-left sm:text-right flex-shrink-0">
+                 <p className="text-[9px] font-display font-black text-amber-600 uppercase tracking-widest leading-none mb-2 sm:mb-3 hidden sm:block">Status</p>
+                 <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-50 rounded-full text-[10px] sm:text-xs font-display font-black text-amber-700 border border-amber-100">OPTIMAL</span>
               </div>
             </Link>
 
-            <Link to="/irrigation" className="card p-6 bg-blue-50/30 hover:bg-white border-blue-100 transition-colors group flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform border border-blue-100 text-blue-600">
-                  <CloudSun className="w-6 h-6" />
+            <Link to="/irrigation" className="card p-6 sm:p-8 lg:p-10 card-hover group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8 bg-white border-earth-100 hover:scale-[1.01]">
+              <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto">
+                <div className="p-4 sm:p-5 bg-blue-50 text-blue-600 rounded-[1.5rem] sm:rounded-[2rem] border border-blue-100 group-hover:bg-blue-100 group-hover:rotate-12 transition-all duration-500">
+                  <Calculator className="w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
                 <div>
-                   <p className="text-[10px] font-black text-earth-400 uppercase tracking-widest leading-none mb-1">Weekly Water</p>
-                   <p className="text-2xl font-black text-earth-900 tracking-tight">{recentIrrigation} L</p>
+                   <p className="text-[9px] sm:text-[10px] font-display font-black text-earth-300 uppercase tracking-[0.3em] mb-2 sm:mb-3 leading-none italic">Hydration Flux</p>
+                   <p className="text-4xl sm:text-5xl font-display font-black text-earth-900 tracking-tighter leading-none italic">{recentIrrigation} <span className="text-lg sm:text-xl opacity-20 truncate">liters</span></p>
                 </div>
               </div>
-              <div className="text-right">
-                 <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest leading-none mb-1">Usage</p>
-                 <p className="text-sm font-black text-earth-900 italic">Normal</p>
+              <div className="text-left sm:text-right flex-shrink-0">
+                 <p className="text-[9px] font-display font-black text-blue-600 uppercase tracking-widest leading-none mb-2 sm:mb-3 hidden sm:block">Status</p>
+                 <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 rounded-full text-[10px] sm:text-xs font-display font-black text-blue-700 border border-blue-100">NORMAL</span>
               </div>
             </Link>
           </div>
         </div>
 
-        <div className="space-y-6">
-          {/* Weather Center */}
+        <div className="space-y-8 h-full">
           <WeatherWidget 
             lat={currentFarm?.latitude} 
             lon={currentFarm?.longitude} 
@@ -235,132 +267,155 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Active Cycles */}
-        <section className="card p-0 overflow-hidden border-earth-100 shadow-md">
-          <div className="p-6 border-b border-earth-100 bg-earth-50/80 backdrop-blur-sm flex justify-between items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Active Cycles - Refined Display */}
+        <section className="card p-0 overflow-hidden border-earth-200 shadow-xl bg-white">
+          <div className="p-10 border-b border-earth-100 bg-earth-50/30 flex justify-between items-end">
             <div>
-              <h2 className="text-xl font-black text-earth-900 uppercase tracking-tight">{t('sidebar.cycles')}</h2>
-              <p className="text-[10px] font-bold text-earth-400 uppercase tracking-widest mt-1">{t('dashboard.current_plantings')}</p>
+              <div className="flex items-center gap-3 mb-3">
+                 <div className="w-2 h-2 bg-forest-600 rounded-full"></div>
+                 <h2 className="text-[10px] font-display font-black text-forest-600 uppercase tracking-[0.4em]">{t('sidebar.cycles')}</h2>
+              </div>
+              <h3 className="text-3xl font-display font-black italic tracking-tighter text-earth-900 leading-none">{t('dashboard.current_plantings')}</h3>
             </div>
+            <Link to="/cycles" className="text-[10px] font-display font-black text-earth-400 hover:text-earth-900 transition-colors uppercase tracking-widest border-b border-earth-200 pb-1">View Archive</Link>
           </div>
-          <div className="p-6 space-y-4 bg-white">
+          <div className="p-10 space-y-8">
             {activeCycles.length === 0 ? (
-              <div className="py-8 flex flex-col items-center justify-center text-center">
-                <Sprout className="w-12 h-12 text-earth-200 mb-3" />
-                <p className="text-earth-500 font-bold uppercase tracking-widest text-sm">{t('dashboard.no_active_cycles')}</p>
+              <div className="py-20 flex flex-col items-center justify-center text-center">
+                <div className="w-24 h-24 bg-earth-50 rounded-[2.5rem] border border-earth-100 flex items-center justify-center mb-6 shadow-inner">
+                   <Sprout className="w-10 h-10 text-earth-200" />
+                </div>
+                <p className="text-earth-400 font-display font-black uppercase tracking-[0.2em] text-xs">{t('dashboard.no_active_cycles')}</p>
               </div>
             ) : (
-              activeCycles.map(cycle => {
+              activeCycles.map((cycle, idx) => {
                 const farm = farms.find(f => f.id === cycle.farmId);
                 return (
-                  <Link to={`/cycles/${cycle.id}`} key={cycle.id} className="block p-5 rounded-2xl border border-earth-100 bg-white hover:bg-forest-50/30 hover:border-forest-200 transition-all active:scale-[0.98] group relative overflow-hidden">
-                    <div className="flex items-center gap-5">
-                      <div className="h-12 w-12 bg-forest-50 border border-forest-100 rounded-2xl flex items-center justify-center group-hover:bg-forest-500 transition-colors shadow-sm">
-                        <Sprout className="w-6 h-6 text-forest-600 group-hover:text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="font-black text-earth-900 text-lg uppercase tracking-tight group-hover:text-forest-700 transition-colors truncate pr-2">{cycle.purpose} {cycle.variety}</p>
-                          <span className="flex-shrink-0 px-3 py-1 bg-forest-50 border border-forest-100 text-forest-700 text-[10px] font-black uppercase tracking-widest rounded-lg">
-                            Active
-                          </span>
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    key={cycle.id}
+                  >
+                    <Link to={`/cycles/${cycle.id}`} className="block group">
+                      <div className="flex items-center gap-8 mb-6">
+                        <div className="h-20 w-20 bg-forest-50 border border-forest-100 rounded-[2rem] flex items-center justify-center group-hover:bg-forest-600 group-hover:scale-110 transition-all duration-500 shadow-sm relative overflow-hidden">
+                           <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                           <Sprout className="w-10 h-10 text-forest-600 group-hover:text-white relative z-10 transition-colors duration-500" />
                         </div>
-                        <p className="text-xs font-bold text-earth-500 uppercase tracking-widest truncate">{farm?.name} <span className="mx-2 opacity-30">•</span> {cycle.area} ha</p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-4 mb-2">
+                            <h4 className="font-display font-black text-earth-900 text-3xl italic tracking-tighter group-hover:text-forest-600 transition-colors truncate">{cycle.purpose} {cycle.variety}</h4>
+                            <span className="px-3 py-1 bg-forest-100 text-forest-700 text-[9px] font-display font-black uppercase tracking-widest rounded-xl">ACTIVE</span>
+                          </div>
+                          <p className="text-[10px] font-display font-black text-earth-300 uppercase tracking-[0.3em] flex items-center gap-3">
+                            {farm?.name} <span className="w-1.5 h-1.5 bg-earth-200 rounded-full"></span> {cycle.area} LECTARES
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-earth-100">
                       <CropCycleProgressBar cycle={cycle} crop={cropLibrary.find(c => c.id === cycle.cropId)} />
-                    </div>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 )
               })
             )}
           </div>
         </section>
 
-        {/* Tasks Due Today & Pending */}
-        <section className="card p-0 overflow-hidden border-earth-100 shadow-md">
-          <div className="p-6 border-b border-earth-100 bg-earth-50/80 backdrop-blur-sm flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-black text-earth-900 uppercase tracking-tight">{t('dashboard.tasks_due')}</h2>
-              <p className="text-[10px] font-bold text-earth-400 uppercase tracking-widest mt-1">{t('dashboard.action_items')}</p>
-            </div>
+        {/* Action Items - Refined Display */}
+        <section className="card p-0 overflow-hidden border-earth-200 shadow-xl bg-white">
+          <div className="p-10 border-b border-earth-100 bg-earth-50/30 flex justify-between items-end">
+             <div>
+               <div className="flex items-center gap-3 mb-3">
+                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <h2 className="text-[10px] font-display font-black text-amber-600 uppercase tracking-[0.4em]">{t('dashboard.tasks_due')}</h2>
+               </div>
+               <h3 className="text-3xl font-display font-black italic tracking-tighter text-earth-900 leading-none">{t('dashboard.action_items')}</h3>
+             </div>
+             <Link to="/tasks" className="text-[10px] font-display font-black text-earth-400 hover:text-earth-900 transition-colors uppercase tracking-widest border-b border-earth-200 pb-1 text-right">Task Matrix</Link>
           </div>
-          <div className="p-6 space-y-4 bg-white">
+          <div className="p-10 space-y-6">
             {pendingTasks.length === 0 ? (
-              <div className="py-8 flex flex-col items-center justify-center text-center">
-                <CheckCircle2 className="w-12 h-12 text-earth-200 mb-3" />
-                <p className="text-earth-500 font-bold uppercase tracking-widest text-sm">{t('dashboard.all_completed')}</p>
+              <div className="py-20 flex flex-col items-center justify-center text-center">
+                <div className="w-24 h-24 bg-forest-50 rounded-[2.5rem] border border-forest-100 flex items-center justify-center mb-6 shadow-inner">
+                   <CheckCircle2 className="w-10 h-10 text-forest-200" />
+                </div>
+                <p className="text-earth-400 font-display font-black uppercase tracking-[0.2em] text-xs">{t('dashboard.all_completed')}</p>
               </div>
             ) : (
-              pendingTasks.slice(0, 5).map(task => {
+              pendingTasks.slice(0, 5).map((task, idx) => {
                 const isExpanded = expandedTaskId === task.id;
+                const isDueToday = task.dueDate === todayStr;
                 return (
-                  <div key={task.id} className={`border rounded-[24px] border-earth-100 overflow-hidden transition-all duration-300 ${isExpanded ? 'bg-forest-50/30 border-forest-200' : 'bg-white hover:border-earth-300'}`}>
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    key={task.id} 
+                    className={`border rounded-[2.5rem] transition-all duration-500 overflow-hidden ${isExpanded ? 'bg-earth-50 border-earth-200 shadow-lg' : 'bg-white border-earth-100 hover:border-earth-300'}`}
+                  >
                     <div 
-                      className="p-5 flex items-center gap-4 cursor-pointer"
+                      className="p-8 flex items-center gap-6 cursor-pointer group"
                       onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
                     >
-                      {task.dueDate === todayStr ? (
-                        <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0 text-amber-600">
-                          <AlertCircle className="w-5 h-5" />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-2xl bg-earth-50 border border-earth-100 flex items-center justify-center flex-shrink-0 text-earth-500">
-                          <Clock className="w-5 h-5" />
-                        </div>
-                      )}
+                      <div className={cn(
+                        "w-16 h-16 rounded-[1.75rem] border flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:scale-110",
+                        isDueToday ? 'bg-amber-50 border-amber-100 text-amber-600' : 'bg-earth-50 border-earth-100 text-earth-400'
+                      )}>
+                        {isDueToday ? <AlertCircle className="w-7 h-7" /> : <Clock className="w-7 h-7" />}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1 overflow-hidden">
-                          <p className="font-black text-earth-900 tracking-tight truncate">{task.taskType}</p>
+                        <div className="flex items-center gap-4 mb-2 overflow-hidden">
+                          <p className="font-display font-black text-earth-900 text-2xl italic tracking-tighter truncate uppercase group-hover:text-forest-600 transition-colors">{task.taskType}</p>
                           {task.checklist && (
-                            <span className="text-[9px] bg-white border border-earth-200 text-earth-600 px-2 py-0.5 rounded-lg font-black uppercase tracking-widest shadow-sm flex-shrink-0">
+                            <span className="px-3 py-1 bg-white border border-earth-200 text-earth-900 text-[9px] font-display font-black uppercase tracking-widest rounded-xl shadow-sm">
                               {task.checklist.filter(i => i.completed).length}/{task.checklist.length}
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] text-earth-500 font-bold uppercase tracking-widest truncate">{t('dashboard.due')}: {task.dueDate}</p>
+                        <p className={cn("text-[9px] font-display font-black uppercase tracking-[0.3em] font-bold", isDueToday ? "text-amber-600 animate-pulse" : "text-earth-300")}>
+                          {t('dashboard.due')}: {task.dueDate}
+                        </p>
                       </div>
                     </div>
                     
                     {isExpanded && (
-                      <div className="px-12 pb-4 space-y-3 animate-in slide-in-from-top-2 duration-200">
+                      <div className="px-10 pb-10 space-y-6 pt-2 animate-in slide-in-from-top-4 duration-500">
+                        <div className="h-px bg-earth-200 w-full mb-6 opacity-30"></div>
                         {task.checklist ? (
-                          <div className="space-y-1.5">
-                            {task.checklist.slice(0, 3).map(item => (
-                              <label key={item.id} className="flex items-center gap-2 cursor-pointer group">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {task.checklist.map(item => (
+                              <label key={item.id} className="flex items-center gap-4 cursor-pointer group/item p-4 bg-white/50 rounded-2xl border border-earth-100 hover:bg-white hover:border-forest-200 transition-all">
                                 <input 
                                   type="checkbox" 
-                                  className="w-4 h-4 rounded text-forest-600 focus:ring-forest-500"
+                                  className="w-5 h-5 rounded-lg text-forest-600 focus:ring-forest-500 border-earth-300 transition-all"
                                   checked={item.completed}
                                   onChange={() => toggleChecklistItem(task.id, item.id)}
                                 />
-                                <span className={`text-[11px] ${item.completed ? 'text-earth-400 line-through' : 'text-earth-600'}`}>{item.label}</span>
+                                <span className={cn(
+                                  "text-sm font-display font-bold transition-all",
+                                  item.completed ? 'text-earth-300 line-through' : 'text-earth-700'
+                                )}>{item.label}</span>
                               </label>
                             ))}
-                            {task.checklist.length > 3 && (
-                              <p className="text-[10px] text-earth-400 font-bold uppercase tracking-widest pl-6">+{task.checklist.length - 3} more items...</p>
-                            )}
                           </div>
                         ) : (
-                          <p className="text-[11px] text-earth-400 italic">{t('dashboard.no_checklist')}</p>
+                          <p className="text-sm text-earth-400 italic font-medium font-serif">{t('dashboard.no_checklist')}</p>
                         )}
                         
-                        {(!task.checklist || task.checklist.every(i => i.completed)) && (
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              completeTask(task.id);
-                            }}
-                            className="w-full py-1.5 bg-forest-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider"
-                          >
-                            {t('dashboard.complete_task')}
-                          </button>
-                        )}
+                        <div className="flex gap-4 mt-8">
+                           <button 
+                             onClick={(e) => { e.stopPropagation(); completeTask(task.id); }}
+                             disabled={task.checklist && !task.checklist.every(i => i.completed)}
+                             className="flex-1 bg-forest-900 text-white font-display font-black py-5 rounded-[1.5rem] text-xs uppercase tracking-widest shadow-2xl shadow-forest-900/10 hover:bg-forest-800 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+                           >
+                             EXECUTE COMPLETE
+                           </button>
+                        </div>
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 );
               })
             )}

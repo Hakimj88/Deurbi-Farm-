@@ -13,11 +13,11 @@ export function Layout() {
       {selectedFarmId && (
         <>
           <Sidebar />
-          <main className="flex-1 overflow-y-auto w-full pb-20 md:pb-0 relative">
-            <div className="absolute top-4 end-4 md:top-8 md:end-8 z-50">
+          <main className="flex-1 overflow-y-auto w-full pb-20 md:pb-0 relative custom-scrollbar">
+            <div className="absolute top-6 end-6 md:top-10 md:end-10 z-50">
               <LanguageSwitcher />
             </div>
-            <div className="max-w-7xl mx-auto p-4 md:p-8 lg:p-12 pt-16 md:pt-12">
+            <div className="max-w-[1600px] mx-auto p-6 md:p-10 lg:p-16 xl:p-20 pt-20 md:pt-16">
               <Outlet />
             </div>
           </main>

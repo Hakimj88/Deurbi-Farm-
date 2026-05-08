@@ -1,0 +1,380 @@
+import { Crop } from '../types';
+
+export const cropLibrary: Crop[] = [
+  // CEREALS
+  {
+    id: 'c1',
+    name: 'Maize (Corn)',
+    localNames: 'Nyoo (Mandinka), Mbooy (Wolof)',
+    scientificName: 'Zea mays',
+    cycleDays: 110,
+    zones: ['Sudan Savanna', 'Guinea Savanna'],
+    spacing: '75cm x 25cm',
+    expectedYield: '1.5 - 4.0 t/ha',
+    category: 'Cereal',
+    optimalPh: [5.8, 7.0],
+    waterNeeds: 'High',
+    nutrients: { n: 'High', p: 'Medium', k: 'Medium' },
+    commonPests: ['Stem Borer', 'Fall Armyworm'],
+    stages: [
+      { name: 'Seedling', durationDays: 20 },
+      { name: 'Vegetative', durationDays: 30 },
+      { name: 'Tasseling/Silking', durationDays: 20 },
+      { name: 'Grain Fill', durationDays: 30 },
+      { name: 'Maturity', durationDays: 10 }
+    ]
+  },
+  {
+    id: 'c6',
+    name: 'Sorghum',
+    localNames: 'Basi (Wolof), Kenke (Mandinka)',
+    scientificName: 'Sorghum bicolor',
+    cycleDays: 120,
+    zones: ['Sudan Savanna', 'Sahel'],
+    spacing: '75cm x 20cm',
+    expectedYield: '1.0 - 3.0 t/ha',
+    category: 'Cereal',
+    optimalPh: [5.5, 7.5],
+    waterNeeds: 'Moderate',
+    nutrients: { n: 'Medium', p: 'Medium', k: 'Low' }
+  },
+  {
+    id: 'c7',
+    name: 'Pearl Millet',
+    localNames: 'Dugub (Wolof), Sanyo (Mandinka)',
+    scientificName: 'Pennisetum glaucum',
+    cycleDays: 90,
+    zones: ['Sahel', 'Sudan Savanna'],
+    spacing: '75cm x 30cm',
+    expectedYield: '0.5 - 1.5 t/ha',
+    category: 'Cereal',
+    optimalPh: [5.0, 7.0],
+    waterNeeds: 'Low'
+  },
+  {
+    id: 'c4',
+    name: 'Rice (Irrigated/Lowland)',
+    localNames: 'Malo (Wolof), Mano (Mandinka)',
+    scientificName: 'Oryza sativa',
+    cycleDays: 130,
+    zones: ['Fadama', 'Mangrove Swamp', 'Irrigated'],
+    spacing: '20cm x 20cm',
+    expectedYield: '2.0 - 5.0 t/ha',
+    category: 'Cereal',
+    optimalPh: [5.5, 6.5],
+    waterNeeds: 'High'
+  },
+  {
+    id: 'c11',
+    name: 'Fonio',
+    localNames: 'Acha, Findi (Mandinka)',
+    scientificName: 'Digitaria exilis',
+    cycleDays: 80,
+    zones: ['Sahel', 'Sudan Savanna'],
+    spacing: 'Broadcast',
+    expectedYield: '0.5 - 1.0 t/ha',
+    category: 'Cereal'
+  },
+  // LEGUMES
+  {
+    id: 'c3',
+    name: 'Groundnut (Peanut)',
+    localNames: 'Gerte (Wolof), Tiga (Mandinka)',
+    scientificName: 'Arachis hypogaea',
+    cycleDays: 120,
+    zones: ['Sudan Savanna', 'Sahel'],
+    spacing: '40cm x 15cm',
+    expectedYield: '1.0 - 2.5 t/ha',
+    category: 'Legume',
+    optimalPh: [5.5, 6.5],
+    waterNeeds: 'Moderate',
+    nutrients: { n: 'Low', p: 'High', k: 'Medium' }
+  },
+  {
+    id: 'c2',
+    name: 'Cowpea (Niébé)',
+    localNames: 'Nyebe (Wolof), Sho (Mandinka)',
+    scientificName: 'Vigna unguiculata',
+    cycleDays: 70,
+    zones: ['Sahel', 'Sudan Savanna'],
+    spacing: '50cm x 20cm',
+    expectedYield: '0.5 - 1.5 t/ha',
+    category: 'Legume',
+    optimalPh: [5.5, 7.0],
+    waterNeeds: 'Low'
+  },
+  {
+    id: 'c12',
+    name: 'Bambara Groundnut',
+    localNames: 'Voandzou',
+    scientificName: 'Vigna subterranea',
+    cycleDays: 110,
+    zones: ['Sudan Savanna', 'Sahel'],
+    spacing: '30cm x 15cm',
+    expectedYield: '0.5 - 1.5 t/ha',
+    category: 'Legume'
+  },
+  {
+    id: 'c13',
+    name: 'Soybean',
+    localNames: 'Soya',
+    scientificName: 'Glycine max',
+    cycleDays: 100,
+    zones: ['Guinea Savanna'],
+    spacing: '50cm x 10cm',
+    expectedYield: '1.5 - 2.5 t/ha',
+    category: 'Legume'
+  },
+  // ROOTS & TUBERS
+  {
+    id: 'c5',
+    name: 'Cassava',
+    localNames: 'Nyambi (Wolof/Mandinka)',
+    scientificName: 'Manihot esculenta',
+    cycleDays: 270,
+    zones: ['Guinea Savanna', 'Forest-Savanna'],
+    spacing: '1m x 1m',
+    expectedYield: '10 - 20 t/ha',
+    category: 'Root',
+    optimalPh: [5.0, 6.5],
+    waterNeeds: 'Moderate'
+  },
+  {
+    id: 'c9',
+    name: 'Sweet Potato',
+    localNames: 'Patat (Wolof/Mandinka)',
+    scientificName: 'Ipomoea batatas',
+    cycleDays: 100,
+    zones: ['Sudan Savanna', 'Guinea Savanna'],
+    spacing: '30cm x 80cm',
+    expectedYield: '8 - 15 t/ha',
+    category: 'Root'
+  },
+  {
+    id: 'c8',
+    name: 'Yam',
+    localNames: 'Nyambi (Mandinka - usually refers to Cassava locally, Yam is Igname)',
+    scientificName: 'Dioscorea',
+    cycleDays: 240,
+    zones: ['Guinea Savanna'],
+    spacing: '1m x 1m',
+    expectedYield: '10 - 25 t/ha',
+    category: 'Root'
+  },
+  // VEGETABLES
+  {
+    id: 'c30',
+    name: 'Cucumber',
+    localNames: 'Concombre',
+    scientificName: 'Cucumis sativus',
+    cycleDays: 60,
+    zones: ['All Zones (Irrigated)'],
+    spacing: '100cm x 50cm',
+    expectedYield: '15 - 30 t/ha',
+    category: 'Vegetable',
+    optimalPh: [6.0, 7.0],
+    waterNeeds: 'High'
+  },
+  {
+    id: 'c14',
+    name: 'Tomato',
+    localNames: 'Tamaati (Wolof)',
+    scientificName: 'Solanum lycopersicum',
+    cycleDays: 90,
+    zones: ['All Zones (Irrigated)'],
+    spacing: '60cm x 40cm',
+    expectedYield: '15 - 30 t/ha',
+    category: 'Vegetable',
+    optimalPh: [5.5, 6.8],
+    waterNeeds: 'High',
+    nutrients: { n: 'Medium', p: 'High', k: 'High' },
+    commonPests: ['Tuta Absoluta', 'Aphids', 'Fruit Borer'],
+    stages: [
+      { name: 'Nursery', durationDays: 30 },
+      { name: 'Establishing', durationDays: 14 },
+      { name: 'Vegetative', durationDays: 20 },
+      { name: 'Flowering/Fruiting', durationDays: 20 },
+      { name: 'Harvesting', durationDays: 30 }
+    ]
+  },
+  {
+    id: 'c15',
+    name: 'Onion',
+    localNames: 'Linyon, Oignon',
+    scientificName: 'Allium cepa',
+    cycleDays: 110,
+    zones: ['All Zones (Irrigated)'],
+    spacing: '20cm x 10cm',
+    expectedYield: '20 - 40 t/ha',
+    category: 'Vegetable',
+    optimalPh: [6.0, 7.0],
+    waterNeeds: 'Moderate'
+  },
+  {
+    id: 'c16',
+    name: 'Cabbage',
+    localNames: 'Chou',
+    scientificName: 'Brassica oleracea',
+    cycleDays: 85,
+    zones: ['All Zones (Irrigated/Cooler months)'],
+    spacing: '50cm x 50cm',
+    expectedYield: '25 - 40 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c17',
+    name: 'Carrot',
+    localNames: 'Karawet',
+    scientificName: 'Daucus carota',
+    cycleDays: 90,
+    zones: ['All Zones'],
+    spacing: '30cm x 5cm',
+    expectedYield: '15 - 30 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c18',
+    name: 'Eggplant (Garden Egg)',
+    localNames: 'Bataansé, Jaxatu (Wolof)',
+    scientificName: 'Solanum aethiopicum / melongena',
+    cycleDays: 100,
+    zones: ['All Zones'],
+    spacing: '75cm x 50cm',
+    expectedYield: '15 - 25 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c10',
+    name: 'Okra (Gombo)',
+    localNames: 'Kanja (Wolof), Bambo (Mandinka)',
+    scientificName: 'Abelmoschus esculentus',
+    cycleDays: 60,
+    zones: ['All Zones'],
+    spacing: '60cm x 30cm',
+    expectedYield: '5 - 10 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c19',
+    name: 'Pepper (Chili & Sweet)',
+    localNames: 'Kani (Wolof), Kaani',
+    scientificName: 'Capsicum',
+    cycleDays: 110,
+    zones: ['All Zones'],
+    spacing: '60cm x 45cm',
+    expectedYield: '8 - 15 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c20',
+    name: 'Spinach / Amaranth',
+    localNames: 'Bissage, Mbor-mbor',
+    scientificName: 'Amaranthus spp.',
+    cycleDays: 45,
+    zones: ['All Zones'],
+    spacing: '30cm x 15cm',
+    expectedYield: '5 - 10 t/ha',
+    category: 'Vegetable'
+  },
+  {
+    id: 'c21',
+    name: 'Green Beans',
+    localNames: 'Haricot vert',
+    scientificName: 'Phaseolus vulgaris',
+    cycleDays: 60,
+    zones: ['All Zones (Irrigated)'],
+    spacing: '40cm x 15cm',
+    expectedYield: '8 - 12 t/ha',
+    category: 'Vegetable'
+  },
+  // FRUITS & ORCHARDS
+  {
+    id: 'c22',
+    name: 'Mango',
+    localNames: 'Màngo (Wolof/Mandinka)',
+    scientificName: 'Mangifera indica',
+    cycleDays: 1000,
+    zones: ['All Zones'],
+    spacing: '10m x 10m',
+    expectedYield: '10 - 20 t/ha (mature)',
+    category: 'Fruit'
+  },
+  {
+    id: 'c23',
+    name: 'Banana',
+    localNames: 'Banaana',
+    scientificName: 'Musa',
+    cycleDays: 365,
+    zones: ['Guinea Savanna', 'Irrigated'],
+    spacing: '3m x 3m',
+    expectedYield: '15 - 30 t/ha',
+    category: 'Fruit'
+  },
+  {
+    id: 'c24',
+    name: 'Citrus (Orange, Lemon)',
+    localNames: 'Soraas, Limon',
+    scientificName: 'Citrus spp.',
+    cycleDays: 1000,
+    zones: ['All Zones'],
+    spacing: '6m x 6m',
+    expectedYield: '15 - 25 t/ha',
+    category: 'Fruit'
+  },
+  {
+    id: 'c25',
+    name: 'Papaya',
+    localNames: 'Pawpaw, Papay',
+    scientificName: 'Carica papaya',
+    cycleDays: 270,
+    zones: ['All Zones'],
+    spacing: '2.5m x 2.5m',
+    expectedYield: '20 - 40 t/ha',
+    category: 'Fruit'
+  },
+  {
+    id: 'c26',
+    name: 'Cashew',
+    localNames: 'Darkaase (Wolof)',
+    scientificName: 'Anacardium occidentale',
+    cycleDays: 1095,
+    zones: ['Sudan Savanna', 'Guinea Savanna'],
+    spacing: '10m x 10m',
+    expectedYield: '0.5 - 1.5 t/ha (nuts)',
+    category: 'Cash Crop'
+  },
+  {
+    id: 'c27',
+    name: 'Baobab',
+    localNames: 'Buy (Wolof), Sira (Mandinka)',
+    scientificName: 'Adansonia digitata',
+    cycleDays: 1800,
+    zones: ['Sahel', 'Sudan Savanna'],
+    spacing: '15m x 15m',
+    expectedYield: 'Highly variable',
+    category: 'Fruit'
+  },
+  // CASH CROPS
+  {
+    id: 'c28',
+    name: 'Cotton',
+    localNames: 'Koton',
+    scientificName: 'Gossypium',
+    cycleDays: 150,
+    zones: ['Sudan Savanna', 'Guinea Savanna'],
+    spacing: '80cm x 30cm',
+    expectedYield: '1.0 - 2.5 t/ha',
+    category: 'Cash Crop'
+  },
+  {
+    id: 'c29',
+    name: 'Sesame',
+    localNames: 'Bené (Wolof)',
+    scientificName: 'Sesamum indicum',
+    cycleDays: 100,
+    zones: ['Sahel', 'Sudan Savanna'],
+    spacing: '50cm x 15cm',
+    expectedYield: '0.4 - 1.0 t/ha',
+    category: 'Cash Crop'
+  }
+];

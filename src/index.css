@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-terracotta-50: #fcf4f2;
+  --color-terracotta-100: #f8e5e1;
+  --color-terracotta-500: #D46A43;
+  --color-terracotta-600: #c24624;
+  --color-terracotta-900: #5c1e0d;
+
+  --color-earth-50: #F8F7F3;
+  --color-earth-100: #eae4d9;
+  --color-earth-200: #dcd4c3;
+  --color-earth-300: #b9ac93;
+  --color-earth-400: #a39171;
+  --color-earth-500: #8a7b5d;
+  --color-earth-600: #6b5f48;
+  --color-earth-700: #4d4534;
+  --color-earth-800: #333333;
+  --color-earth-900: #1A1A1A;
+  
+  --color-forest-50: #f0fdf4;
+  --color-forest-100: #dcfce7;
+  --color-forest-500: #22c55e;
+  --color-forest-600: #16a34a;
+  --color-forest-700: #15803d;
+  --color-forest-900: #14532d;
+
+  --color-amber-50: #fffbeb;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-earth-50 text-earth-900 antialiased font-sans;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-[32px] border border-earth-100/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] hover:-translate-y-1;
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .badge {
+    @apply px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest;
+  }
+  
+  .btn-primary {
+    @apply bg-forest-600 text-white rounded-2xl px-6 py-3 font-bold text-sm shadow-lg shadow-forest-600/20 hover:bg-forest-700 hover:shadow-forest-700/30 transition-all active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-earth-100 text-earth-700 rounded-2xl px-6 py-3 font-bold text-sm hover:bg-earth-200 transition-all active:scale-95;
+  }
+
+  .organic-shape {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-earth-200 rounded-full;
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Deurbi Farm",
+  "description": "Comprehensive, AI-powered farm and crop management system tailored for Sheikh Jah\u0027s agricultural operations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
